@@ -9,8 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  useEffect(() => {
-    console.log(window.scrollX);
-  }, []);
   return <section>"My App"</section>;
 }
