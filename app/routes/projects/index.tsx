@@ -1,5 +1,6 @@
 import type { Route } from './+types/index';
 import type { Project } from '~/types';
+import ProjectCard from '~/components/ProjectCard';
 
 export async function loader({
   request,
@@ -13,7 +14,16 @@ export async function loader({
 const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
   const { projects } = loaderData as { projects: Project[] };
 
-  return <h1 className="text-white text-3xl font-bold">My Projetcs</h1>;
+  return (
+    <>
+      <h2 className="text-white text-3xl font-bold mb-8">My Projetcs</h2>
+      <div className="grid gap-6 sm:grid-cols-2">
+        {projects.map((project) => (
+          <ProjectCard project={project} key={project.id} />
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default ProjectsPage;
