@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import type { Route } from './+types/index';
 import type { Project } from '~/types';
 import ProjectCard from '~/components/ProjectCard';
+import Pagination from '~/components/Pagination';
 
 export async function loader({
   request,
@@ -14,14 +16,31 @@ export async function loader({
 const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
   const { projects } = loaderData as { projects: Project[] };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [projectsPerPage, setProjectsPerPage] = useState(10);
+
+  // Calculate the total amount of pages+
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+
+  // Get current pages projects
+  const indexOfLast = currentPage * projectsPerPage;
+  const indexOfFirst = indexOfLast - projectsPerPage;
+
+  const currentProjects = projects.slice(indexOfFirst, indexOfLast);
+
   return (
     <>
       <h2 className="text-white text-3xl font-bold mb-8">My Projetcs</h2>
       <div className="grid gap-6 sm:grid-cols-2">
-        {projects.map((project) => (
+        {currentProjects.map((project) => (
           <ProjectCard project={project} key={project.id} />
         ))}
       </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </>
   );
 };
