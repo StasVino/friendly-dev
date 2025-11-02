@@ -14,23 +14,50 @@ export async function loader({
 }
 
 const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
-  const { projects } = loaderData as { projects: Project[] };
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [projectsPerPage, setProjectsPerPage] = useState(10);
 
+  const { projects } = loaderData as { projects: Project[] };
+
+  //Get unique categories
+  const categories = [
+    'All',
+    ...new Set(projects.map((project) => project.category)),
+  ];
+
+  //Filter projects based on category
+  const filterProjects =
+    selectedCategory === 'All'
+      ? projects
+      : projects.filter((project) => project.category === selectedCategory);
+
   // Calculate the total amount of pages+
-  const totalPages = Math.ceil(projects.length / projectsPerPage);
+  const totalPages = Math.ceil(filterProjects.length / projectsPerPage);
 
   // Get current pages projects
   const indexOfLast = currentPage * projectsPerPage;
   const indexOfFirst = indexOfLast - projectsPerPage;
-
-  const currentProjects = projects.slice(indexOfFirst, indexOfLast);
+  const currentProjects = filterProjects.slice(indexOfFirst, indexOfLast);
 
   return (
     <>
       <h2 className="text-white text-3xl font-bold mb-8">My Projetcs</h2>
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => {
+              setSelectedCategory(category);
+              setCurrentPage(1);
+            }}
+            className={`px-3 py-1 rounded text-sm ${selectedCategory === category ? 'bg-blue-600 text-white ' : 'bg-gray-700 cursor-pointer'}`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
       <div className="grid gap-6 sm:grid-cols-2">
         {currentProjects.map((project) => (
           <ProjectCard project={project} key={project.id} />
