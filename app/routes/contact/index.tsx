@@ -1,11 +1,34 @@
-import { div } from 'framer-motion/client';
+import { sub } from 'framer-motion/client';
+import type { Route } from './+types';
+import { Form } from 'react-router';
 
-const ContactPage = () => {
+export async function action({ request }: Route.ActionArgs) {
+  const formDate = await request.formData();
+  const name = formDate.get('name');
+  const email = formDate.get('email');
+  const subject = formDate.get('subject');
+  const message = formDate.get('message');
+  const data = {
+    name,
+    email,
+    subject,
+    message,
+  };
+
+  return { message: 'Form submitted successfully', data };
+}
+
+const ContactPage = ({ actionData }: Route.ComponentProps) => {
   return (
     <div className="max-w-3xl mx-auto mt-12 px-6 py-8 bg-gray-900">
-      <h2 className="text-3xl text-white font-bold"> 🤝 Contact Me</h2>
+      <h2 className="text-3xl t ext-white font-bold"> 🤝 Contact Me</h2>
 
-      <form className="space-y-6">
+      {actionData?.message ? (
+        <p className="p-4 mb-6 bg-green-700 text-green-100 text-center rounded-lg border border-green-500 shadow-md">
+          {actionData.message}
+        </p>
+      ) : null}
+      <Form className="space-y-6" method="post">
         <div>
           <label
             htmlFor="name"
@@ -64,7 +87,7 @@ const ContactPage = () => {
         <button className="w-full bg-blue-600 text0white py-2 rounded-lg bg-blue-600 hover:bg-blue-700 cursor-pointer">
           Send Message
         </button>
-      </form>
+      </Form>
     </div>
   );
 };
