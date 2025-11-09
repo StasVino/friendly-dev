@@ -45,7 +45,7 @@ const BlogPostDetailsPage = ({ loaderData }: BlogPostDetailsPage) => {
         {postMeta.title}
       </h1>
       <p className="text-sm text-gray-400 mb-6">
-        {new Date(postMeta.date).toLocaleDateString()}
+        {new Date(postMeta.date).toDateString()}
       </p>
 
       <div className="prose prose-invert max-w-none mb-12">
