@@ -9,7 +9,7 @@ export async function loader({
   request,
 }: Route.LoaderArgs): Promise<{ projects: Project[] }> {
   const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/projects?popuplate=*`
+    `${import.meta.env.VITE_API_URL}/projects?populate=*`
   );
 
   const json = await res.json();
