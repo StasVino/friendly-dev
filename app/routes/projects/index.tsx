@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Route } from './+types/index';
-import type { Project } from '~/types';
+import type { Project, StrapiResponse, StarpiProject } from '~/types';
 import ProjectCard from '~/components/ProjectCard';
 import Pagination from '~/components/Pagination';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -12,7 +12,7 @@ export async function loader({
     `${import.meta.env.VITE_API_URL}/projects?populate=*`
   );
 
-  const json = await res.json();
+  const json: StrapiResponse<StarpiProject> = await res.json();
 
   const projects = json.data.map((item) => ({
     id: item.id,
@@ -35,7 +35,7 @@ const ProjectsPage = ({ loaderData }: Route.ComponentProps) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [projectsPerPage, setProjectsPerPage] = useState(10);
+  const [projectsPerPage, setProjectsPerPage] = useState(4);
 
   const { projects } = loaderData as { projects: Project[] };
 
