@@ -41,3 +41,24 @@ export type StarpiProject = {
   category: string;
   featured: boolean;
 };
+
+export type StarpiPost = {
+  id: string;
+  documentId: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+
+  date: string;
+  body: string;
+  featured: boolean;
+  image?: {
+    url: string;
+    formats?: {
+      thumbnail?: { url: string };
+      small?: { url: string };
+      medium?: { url: string };
+      large?: { url: string };
+    };
+  };
+};
