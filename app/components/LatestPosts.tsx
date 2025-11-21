@@ -1,18 +1,17 @@
 import { Link } from 'react-router';
-import type { PostMeta, Project } from '~/types';
+import type { Post, Project } from '~/types';
 
 type LatestPostsProps = {
-  posts: PostMeta[];
+  posts: Post[];
   limit?: number;
 };
 
 const LatestPosts = ({ posts, limit = 3 }: LatestPostsProps) => {
-  const sorted = [...posts].sort((a: PostMeta, b: PostMeta) => {
+  const sorted = [...posts].sort((a: Post, b: Post) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
   const latest = sorted.slice(0, limit);
-
   return (
     <section className="max-w-6xl mx-auto px-6 py-12">
       <h2 className="text-2xl font-bold mb-6 text-white">Latest Posts</h2>
@@ -27,7 +26,6 @@ const LatestPosts = ({ posts, limit = 3 }: LatestPostsProps) => {
               {post.title}
             </h3>
             <p className="text-sm text-gray-300">{post.excerpt}</p>
-
             <span className="block mtm-3 text-xs text-gray-400">
               {new Date(post.date).toDateString()}
             </span>

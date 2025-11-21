@@ -1,7 +1,12 @@
 import type { Route } from './+types/index';
 import FeaturedProjects from '~/components/FeaturedProjects';
-import type { Project, StarpiProject, StrapiResponse } from '~/types';
-import type { PostMeta } from '~/types';
+import type {
+  Project,
+  StarpiPost,
+  StarpiProject,
+  StrapiResponse,
+} from '~/types';
+import type { Post } from '~/types';
 import AboutPreview from '~/components/AboutPreview';
 import LatestPosts from '~/components/LatestPosts';
 
@@ -14,13 +19,13 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({
   request,
-}: Route.LoaderArgs): Promise<{ projects: Project[]; posts: PostMeta[] }> {
+}: Route.LoaderArgs): Promise<{ projects: Project[]; posts: Post[] }> {
   const url = new URL(request.url);
   const [projectRes, postRes] = await Promise.all([
     fetch(
       `${import.meta.env.VITE_API_URL}/projects?filters[featured][$eq]=true&populate=*`
     ),
-    fetch(new URL('/posts-meta.json', url)),
+    fetch(`${import.meta.env.VITE_API_URL}/posts?sort[0]=date:desc&populate=*`),
   ]);
 
   if (!projectRes.ok || !postRes.ok) {
@@ -28,7 +33,7 @@ export async function loader({
   }
 
   const projectJson: StrapiResponse<StarpiProject> = await projectRes.json();
-  const posts = await postRes.json();
+  const postJson: StrapiResponse<StarpiPost> = await postRes.json();
 
   // const [projects, posts] = await Promise.all([
   //   projectRes.json(),
@@ -47,6 +52,18 @@ export async function loader({
     date: item.date,
     category: item.category,
     featured: item.featured,
+  }));
+
+  const posts = postJson.data.map((item) => ({
+    id: item.id,
+    title: item.title,
+    excerpt: item.excerpt,
+    slug: item.slug,
+    date: item.date,
+    body: item.body,
+    image: item.image?.url
+      ? `${import.meta.env.VITE_STRAPI_URL}${item.image.url}`
+      : '/image/no-image.png',
   }));
 
   return { projects, posts };
