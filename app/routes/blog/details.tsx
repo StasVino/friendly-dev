@@ -23,11 +23,8 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     slug: item.slug,
     date: item.date,
     body: item.body,
-    image: item.image?.url
-      ? `${import.meta.env.VITE_STRAPI_URL}${item.image.url}`
-      : '/image/no-image.png',
+    image: item.image?.url ? `${item.image.url}` : '/image/no-image.png',
   };
-  console.log('1');
   // Dynamically import raw markdown
 
   const markdown = await import(`../../posts/${slug}.md?raw`);
